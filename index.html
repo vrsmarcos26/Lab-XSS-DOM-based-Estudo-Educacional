@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab XSS Reflected - JS</title>
+</head>
+<body>
+    <center>
+        <form id="formulario" action="" method="get">
+            <label for="pesquisa">Pesquisar: </label>
+            <input type="text" id="pesquisa" name="pesquisa">
+            <input type="submit" value="Pesquisar">
+        </form>
+
+        <p id="resultado"></p>
+        <p id="flag" style="color: green;"></p>
+    </center>
+
+    <script>
+        document.getElementById("formulario").onsubmit = function(event) {
+            event.preventDefault();
+            var pesquisa = document.getElementById("pesquisa").value;
+            document.getElementById("resultado").innerHTML = "Você pesquisou por: " + pesquisa;
+
+            // Detecção básica de tentativa de XSS
+            if (pesquisa.toLowerCase().includes("<script>") || 
+                pesquisa.toLowerCase().includes("onerror") || 
+                pesquisa.toLowerCase().includes("alert(")) {
+                document.getElementById("flag").innerHTML = "Você encontrou a flag: <strong>FLAG{XSS_JAVASCRIPT_SUCESSO}</strong>";
+            } else {
+                document.getElementById("flag").innerHTML = "";
+            }
+        };
+    </script>
+</body>
+</html>
