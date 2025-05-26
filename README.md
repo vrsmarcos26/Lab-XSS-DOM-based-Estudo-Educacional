@@ -59,7 +59,7 @@ Teste um payload como:
 
 Se detectado, o lab exibirá a flag:
 ```
-FLAG{XSS_JAVASCRIPT_SUCESSO}
+FLAG{X55_J4V45CR1PT_5UC3550}
 ```
 
 ## 🚨 Aviso de segurança
