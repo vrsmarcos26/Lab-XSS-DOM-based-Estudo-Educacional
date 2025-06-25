@@ -61,7 +61,7 @@ Para executar o laboratório, você só precisa de um navegador e uma forma de s
 
 1.  **Clone o Repositório**
     ```bash
-    git clone [https://github.com/vrsmarcos26/Lab-XSS-DOM-based.git](https://github.com/vrsmarcos26/Lab-XSS-DOM-based.git)
+    git clone [https://github.com/vrsmarcos26/Lab-XSS-DOM-based-Estudo-Educacional.git](https://github.com/vrsmarcos26/Lab-XSS-DOM-based-Estudo-Educacional.git)
     cd Lab-XSS-DOM-based
     ```
 
