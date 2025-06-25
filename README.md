@@ -7,9 +7,8 @@
 </div>
 
 <p align="center">
-  <img alt="Linguagem Principal" src="https://img.shields.io/github/languages/top/vrsmarcos26/Lab-XSS-DOM-based?style=for-the-badge&color=F7DF1E">
-  <img alt="Licença" src="https://img.shields.io/github/license/vrsmarcos26/Lab-XSS-DOM-based?style=for-the-badge&color=blue">
-  <img alt="Último Commit" src="https://img.shields.io/github/last-commit/vrsmarcos26/Lab-XSS-DOM-based?style=for-the-badge&color=green">
+  <img alt="Linguagem Principal" src="https://img.shields.io/github/languages/top/vrsmarcos26/Lab-XSS-DOM-based-Estudo-Educacional?style=for-the-badge&color=F7DF1E">
+  <img alt="Último Commit" src="https://img.shields.io/github/last-commit/vrsmarcos26/Lab-XSS-DOM-based-Estudo-Educacional?style=for-the-badge&color=green">
 </p>
 
 <p align="center">
