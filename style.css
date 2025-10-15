@@ -1,0 +1,146 @@
+/* Importando uma fonte moderna do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+/* Variáveis de Cor para facilitar a manutenção */
+:root {
+    --background-color: #121212;
+    --card-color: #1E1E1E;
+    --primary-text-color: #E0E0E0;
+    --secondary-text-color: #BDBDBD;
+    --accent-color: #00A878; /* Um verde "hacker" */
+    --input-bg-color: #2C2C2C;
+    --border-color: #333333;
+}
+
+/* Reset e Estilos Globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto Mono', monospace;
+    background-color: var(--background-color);
+    color: var(--primary-text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Container Principal do Laboratório */
+.lab-container {
+    background-color: var(--card-color);
+    padding: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+/* Cabeçalho com o Título */
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: var(--primary-text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Espaçamento entre os emojis e o texto */
+}
+
+header p {
+    color: var(--secondary-text-color);
+    margin-bottom: 30px;
+}
+
+/* Formulário de Pesquisa */
+#formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--secondary-text-color);
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+
+#pesquisa {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--input-bg-color);
+    color: var(--primary-text-color);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+#pesquisa:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px rgba(0, 168, 120, 0.3);
+}
+
+input[type="submit"] {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--accent-color);
+    color: #FFFFFF;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #008F6A;
+    transform: translateY(-2px);
+}
+
+/* Área de Resultados */
+.results {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px dashed var(--border-color);
+    border-radius: 5px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+#resultado {
+    font-size: 1rem;
+    color: var(--secondary-text-color);
+    word-break: break-all; /* Para quebrar o texto se o payload for muito longo */
+}
+
+#flag {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#flag strong {
+    background-color: rgba(0, 168, 120, 0.1);
+    padding: 5px 10px;
+    border-radius: 5px;
+}
