@@ -3,33 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab XSS Reflected - JS</title>
+    <title>Laboratório de XSS Baseado em DOM</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <center>
-        <form id="formulario" action="" method="get">
-            <label for="pesquisa">Pesquisar: </label>
-            <input type="text" id="pesquisa" name="pesquisa">
-            <input type="submit" value="Pesquisar">
-        </form>
 
-        <p id="resultado"></p>
-        <p id="flag" style="color: green;"></p>
-    </center>
+    <div class="lab-container">
+        <header>
+            <h1>
+                Laboratório de XSS
+            </h1>
+            <p>Ambiente de estudo de vulnerabilidades DOM-based XSS.</p>
+        </header>
+
+        <main>
+            <form id="formulario" action="" method="get">
+                <label for="pesquisa">Digite sua busca para testar o DOM:</label>
+                <div class="input-group">
+                    <input type="text" id="pesquisa" name="pesquisa" placeholder="<img src=x onerror=alert(1)>">
+                    <input type="submit" value="Pesquisar">
+                </div>
+            </form>
+            
+            <div class="results">
+                <p id="resultado">Aguardando sua pesquisa...</p>
+                <p id="flag"></p>
+            </div>
+        </main>
+    </div>
 
     <script>
         document.getElementById("formulario").onsubmit = function(event) {
             event.preventDefault();
             var pesquisa = document.getElementById("pesquisa").value;
-            document.getElementById("resultado").innerHTML = "Você pesquisou por: " + pesquisa;
+            var resultadoEl = document.getElementById("resultado");
+            var flagEl = document.getElementById("flag");
 
-            // Detecção básica de tentativa de XSS
+            // Usar textContent para o texto seguro previne XSS dentro da própria mensagem
+            resultadoEl.textContent = "Você pesquisou por: ";
+            // E innerHTML apenas para o conteúdo que *deve* ser vulnerável
+            var spanVulneravel = document.createElement('span');
+            spanVulneravel.innerHTML = pesquisa;
+            resultadoEl.appendChild(spanVulneravel);
+
+
+            // Detecção básica de tentativa de XSS para revelar a flag
             if (pesquisa.toLowerCase().includes("<script>") || 
                 pesquisa.toLowerCase().includes("onerror") || 
                 pesquisa.toLowerCase().includes("alert(")) {
-                document.getElementById("flag").innerHTML = "Você encontrou a flag: <strong>FLAG{X55_J4V45CR1PT_5UC3550}</strong>";
+                flagEl.innerHTML = "Flag encontrada: <strong>FLAG{X55_J4V45CR1PT_5UC3550}</strong>";
             } else {
-                document.getElementById("flag").innerHTML = "";
+                flagEl.innerHTML = "";
             }
         };
     </script>
