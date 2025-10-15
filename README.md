@@ -1,6 +1,5 @@
 <div align="center">
   <h1>
-    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Brain.png" alt="Cérebro" width="45" height="45" />
     Laboratório de XSS Baseado em DOM
     <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Test%20Tube.png" alt="Tubo de Ensaio" width="45" height="45" />
   </h1>
