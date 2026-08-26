@@ -8,17 +8,18 @@
 <p align="center">
   <img alt="Linguagem Principal" src="https://img.shields.io/github/languages/top/vrsmarcos26/Lab-XSS-DOM-based-Estudo-Educacional?style=for-the-badge&color=F7DF1E">
   <img alt="Último Commit" src="https://img.shields.io/github/last-commit/vrsmarcos26/Lab-XSS-DOM-based-Estudo-Educacional?style=for-the-badge&color=green">
+  <img alt="Hospedagem" src="https://img.shields.io/badge/GitHub_Pages-222222?style=for-the-badge&logo=githubpages&logoColor=white">
 </p>
 
 <p align="center">
-  Um laboratório simples e vulnerável por design para demonstrar e estudar ataques de Cross-Site Scripting (XSS) baseados no DOM, criado para fins estritamente educacionais.
+  Um painel simulado de Inteligência de Ameaças (W-SIEM Security Events) intencionalmente vulnerável a ataques de Cross-Site Scripting (XSS) baseados no DOM.
 </p>
 
 <p align="center">
   <a href="#-aviso-importante">Aviso</a> •
   <a href="#-objetivos-de-aprendizagem">Objetivos</a> •
   <a href="#-tecnologias-utilizadas">Tecnologias</a> •
-  <a href="#-como-rodar-o-laboratório">Como Rodar</a> •
+  <a href="#-como-acessar-o-laboratório">Como Acessar</a> •
   <a href="#-créditos">Créditos</a> •
   <a href="#-licença">Licença</a>
 </p>
@@ -27,75 +28,69 @@
 
 ### ⚠️ Aviso Importante
 
-> **Este projeto é intencionalmente vulnerável.** Ele foi criado para fins estritamente educacionais, com o objetivo de estudar segurança ofensiva em um ambiente controlado. **NÃO FAÇA O DEPLOY DESTA APLICAÇÃO EM UM SERVIDOR PÚBLICO OU DE PRODUÇÃO.** Use-o apenas localmente.
+> **Este projeto é intencionalmente vulnerável.** Ele foi criado para fins estritamente educacionais, com o objetivo de estudar segurança ofensiva em um ambiente controlado. **NÃO REUTILIZE ESTE CÓDIGO EM PROJETOS REAIS OU SERVIDORES DE PRODUÇÃO.**
 
 ---
 
 ### 🎯 Objetivos de Aprendizagem
 
-Este laboratório foi projetado para entender na prática:
+Este laboratório foi projetado para demonstrar na prática:
 
--   Como a manipulação insegura de JavaScript pode levar a vulnerabilidades de XSS no lado do cliente.
--   A diferença fundamental entre XSS Refletido (processado no servidor) e DOM-based XSS (processado no navegador).
--   Os perigos de usar propriedades como `innerHTML` para renderizar conteúdo vindo do usuário.
--   A execução de vetores de ataque comuns para explorar essa falha e obter a execução de código.
+-   Como a manipulação insegura de JavaScript pode levar a vulnerabilidades de XSS no lado do cliente (Client-Side).
+-   A diferença fundamental entre XSS Refletido (processado no servidor) e DOM-based XSS (processado no navegador da vítima).
+-   Como explorar múltiplos **Contextos de Injeção** (HTML Context via `innerHTML` e JavaScript Context via `eval()`).
+-   O comportamento dos navegadores modernos (HTML5) em relação à injeção dinâmica da tag `<script>`.
 
 ---
 
 ### 🛠️ Tecnologias Utilizadas
 
-O ambiente do laboratório é construído com tecnologias web básicas:
+O ambiente do laboratório é construído com tecnologias front-end modernas, dispensando a necessidade de um back-end real:
 
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"></a>
-  <a href="#"><img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"></a>
   <a href="#"><img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white" alt="JavaScript"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind"></a>
 </p>
 
 ---
 
-### ⚙️ Como Rodar o Laboratório
+### ⚙️ Como Acessar o Laboratório
 
-Para executar o laboratório, você só precisa de um navegador e uma forma de servir arquivos HTML localmente.
+Como este laboratório explora uma vulnerabilidade puramente Client-Side, **você não precisa instalar Docker ou configurar servidores locais.**
 
-1.  **Clone o Repositório**
-    ```bash
-    git clone [https://github.com/vrsmarcos26/Lab-XSS-DOM-based-Estudo-Educacional.git](https://github.com/vrsmarcos26/Lab-XSS-DOM-based-Estudo-Educacional.git)
-    cd Lab-XSS-DOM-based
-    ```
+O desafio está hospedado gratuitamente através do GitHub Pages.
+👉 **Acesse o laboratório aqui:** `[COLOQUE_SEU_LINK_AQUI]`
 
-2.  **Inicie um Servidor Local**
-    Você pode usar o servidor embutido do Python ou do PHP, que são as formas mais simples.
-
-    * Com **Python 3**:
-        ```bash
-        python3 -m http.server 8080
-        ```
-    * Com **PHP**:
-        ```bash
-        php -S localhost:8080
-        ```
-    * Alternativamente, use a extensão "Live Server" no VS Code.
-
-3.  **Acesse o Laboratório**
-    Abra seu navegador e acesse: `http://localhost:8080`
+*(Caso prefira auditar o código localmente, basta clonar este repositório e abrir o arquivo `index.html` diretamente no seu navegador).*
 
 <details>
 <summary><strong>💡 Como Resolver o Desafio (Write-up)</strong></summary>
 
 <br>
 
-1.  Acesse a página e você verá um campo de pesquisa.
-2.  Digite qualquer texto (ex: "teste") e clique em "Pesquisar". O valor será refletido na tela, indicando que o DOM foi modificado.
-3.  Para explorar a vulnerabilidade de XSS, injete código HTML/JavaScript no campo. Um payload clássico é:
-    ```html
-    <img src=x onerror="alert('DOM XSS by vrsmarcos26')">
-    ```
-4.  Ao clicar em "Pesquisar", o navegador tentará renderizar a tag `<img>`. Como o `src` é inválido, o evento `onerror` será disparado, executando o JavaScript contido nele.
-5.  O script do laboratório detectará o uso de um payload malicioso e exibirá a flag na tela:
-    ```
-    FLAG{X55_J4V45CR1PT_5UC3550}
-    ```
+O portal "W-SIEM" permite pesquisar logs de eventos de segurança. O que você digitar na barra de pesquisa será refletido tanto na URL (via parâmetro `?q=`) quanto no corpo da página (DOM).
+
+Este laboratório possui **dois pontos de injeção (Sinks)** diferentes para você treinar suas habilidades:
+
+#### 1. Explorando o Contexto HTML (`innerHTML`)
+O desenvolvedor utilizou a propriedade `innerHTML` para renderizar o termo pesquisado na frase "Active filter: [termo]". 
+Você pode usar payloads clássicos baseados em eventos para executar código arbitrário:
+```html
+<img src=x onerror="alert(document.domain)">
+
+*Dica: O laboratório simula vulnerabilidades antigas, permitindo que até mesmo a tag `<script>alert(1)</script>` seja forçada a rodar no DOM.*
+
+#### 2. Explorando o Contexto JavaScript (`eval`)
+O sistema também registra silenciosamente o que o administrador está pesquisando usando a função `eval()`. 
+Para explorar isso, você deve "quebrar" a string do JavaScript, executar o seu alerta e comentar o resto do código da aplicação original.
+**Payload:**
+```javascript
+"; alert(1); //
+```
+
+Ao executar com sucesso um payload válido em qualquer um dos contextos, o script de auditoria do laboratório validará o ataque e revelará a flag de conclusão:
+`FLAG{X55_J4V45CR1PT_5UC3550}`
 
 </details>
 

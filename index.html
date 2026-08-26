@@ -3,57 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório de XSS Baseado em DOM</title>
-    <link rel="stylesheet" href="style.css">
+    <title>W-SIEM | Security Events</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #f4f4f4; color: #333; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .dark-mode { background-color: #1c232f; color: #d3d5d8; }
+        .sidebar { background-color: #12161f; }
+        .topbar { background-color: #ffffff; border-bottom: 1px solid #e5e7eb; }
+        .dark-mode .topbar { background-color: #242b38; border-bottom: 1px solid #12161f; }
+        .card { background-color: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 6px; }
+        .dark-mode .card { background-color: #242b38; box-shadow: none; border: 1px solid #313b4c; }
+        .table-header { background-color: #f9fafb; color: #6b7280; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .dark-mode .table-header { background-color: #1c232f; color: #9ca3af; border-bottom: 1px solid #313b4c; }
+        .status-critical { color: #dc2626; }
+        .dark-mode .status-critical { color: #f87171; }
+        
+        /* Faixa de Aviso do Laboratório */
+        .lab-ribbon {
+            position: fixed; top: 0; right: 0; background: #eab308; color: #422006; 
+            padding: 5px 20px; font-weight: bold; font-size: 0.8rem; z-index: 1000;
+            border-bottom-left-radius: 8px; box-shadow: -2px 2px 10px rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
-<body>
+<body class="dark-mode flex h-screen overflow-hidden">
 
-    <div class="lab-container">
-        <header>
-            <h1>
-                Laboratório de XSS
-            </h1>
-            <p>Ambiente de estudo de vulnerabilidades DOM-based XSS.</p>
-        </header>
-
-        <main>
-            <form id="formulario" action="" method="get">
-                <label for="pesquisa">Digite sua busca para testar o DOM:</label>
-                <div class="input-group">
-                    <input type="text" id="pesquisa" name="pesquisa" placeholder="<img src=x onerror=alert(1)>">
-                    <input type="submit" value="Pesquisar">
-                </div>
-            </form>
-            
-            <div class="results">
-                <p id="resultado">Aguardando sua pesquisa...</p>
-                <p id="flag"></p>
-            </div>
-        </main>
+    <div class="lab-ribbon flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        LABORATÓRIO DOM-XSS
     </div>
 
+    <!-- Sidebar (Wazuh Style) -->
+    <aside class="sidebar w-64 h-full flex flex-col hidden md:flex">
+        <div class="p-4 flex items-center gap-3 border-b border-gray-800">
+            <div class="w-8 h-8 bg-blue-500 rounded flex items-center justify-center font-bold text-white">W</div>
+            <span class="text-xl font-semibold text-white tracking-wide">SIEM Portal</span>
+        </div>
+        <nav class="flex-1 py-4">
+            <ul class="space-y-1">
+                <li><a href="#" class="flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg> Overview</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-4 py-2 bg-blue-600/10 text-blue-400 border-l-4 border-blue-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg> Security events</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg> Integrity monitoring</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        
+        <!-- Topbar com Search -->
+        <header class="topbar h-16 px-6 flex items-center justify-between">
+            <div class="flex-1 max-w-2xl">
+                <form id="searchForm" class="relative">
+                    <svg class="w-5 h-5 absolute left-3 top-2.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" id="searchInput" placeholder="Search by rule.id, agent.ip or event description..." class="w-full bg-gray-100 dark:bg-[#12161f] border border-gray-300 dark:border-gray-700 rounded-md pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                </form>
+            </div>
+            <div class="flex items-center gap-4 ml-4">
+                <span class="text-sm text-gray-400">Time range: <strong class="text-gray-200">Last 24 hours</strong></span>
+                <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center text-sm font-bold text-white border border-gray-600">A</div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="flex-1 overflow-auto p-6">
+            
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <h2 class="text-2xl font-semibold text-gray-100">Security Events</h2>
+                    <p class="text-sm text-gray-400 mt-1">Monitor and analyze security alerts across the infrastructure.</p>
+                </div>
+            </div>
+
+            <!-- Fake Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="card p-4 border-t-4 border-blue-500">
+                    <p class="text-sm text-gray-400 font-semibold uppercase">Total Alerts</p>
+                    <p class="text-3xl font-bold mt-2">1,204</p>
+                </div>
+                <div class="card p-4 border-t-4 border-red-500">
+                    <p class="text-sm text-gray-400 font-semibold uppercase">Authentication Failures</p>
+                    <p class="text-3xl font-bold mt-2 text-red-400">342</p>
+                </div>
+                <div class="card p-4 border-t-4 border-yellow-500">
+                    <p class="text-sm text-gray-400 font-semibold uppercase">Vulnerability Detect</p>
+                    <p class="text-3xl font-bold mt-2">87</p>
+                </div>
+                <div class="card p-4 border-t-4 border-green-500">
+                    <p class="text-sm text-gray-400 font-semibold uppercase">Active Agents</p>
+                    <p class="text-3xl font-bold mt-2">45 / 45</p>
+                </div>
+            </div>
+
+            <!-- Injected Search Term Info -->
+            <div id="resultsInfo" class="hidden mb-4 p-3 bg-blue-900/20 border border-blue-800 rounded-md text-sm">
+                <!-- XSS SINK 1 (HTML Context): innerHTML injection point -->
+                <span id="searchQuery"></span>
+            </div>
+
+            <!-- Tabela de Logs -->
+            <div class="card overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="px-6 py-3">Timestamp</th>
+                                <th class="px-6 py-3">Agent IP</th>
+                                <th class="px-6 py-3">Rule Level</th>
+                                <th class="px-6 py-3">Description</th>
+                                <th class="px-6 py-3">Mitre ATT&CK</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logTableBody" class="divide-y divide-gray-200 dark:divide-gray-700/50">
+                            <!-- JS vai popular os logs aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Alerta da Flag -->
+            <div id="flagAlert" class="hidden mt-6 bg-green-900/30 border border-green-500/50 rounded-lg p-4 flex items-center gap-4">
+                <span class="text-2xl">🏆</span>
+                <div>
+                    <p class="text-green-400 font-bold text-sm uppercase">Vulnerabilidade Explorada com Sucesso</p>
+                    <p class="text-gray-200 font-mono text-lg mt-1" id="flagText"></p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
     <script>
-        document.getElementById("formulario").onsubmit = function(event) {
-            event.preventDefault();
-            var pesquisa = document.getElementById("pesquisa").value;
-            var resultadoEl = document.getElementById("resultado");
-            var flagEl = document.getElementById("flag");
+        // Banco de Dados Fictício de Eventos (estilo Wazuh)
+        const mockEvents = [
+            { time: "2026-08-26 16:45:02", ip: "192.168.1.15", level: 10, desc: "sshd: authentication failed.", mitre: "T1110" },
+            { time: "2026-08-26 16:30:11", ip: "10.0.0.8", level: 12, desc: "Web server 400 error code.", mitre: "T1190" },
+            { time: "2026-08-26 15:22:05", ip: "203.0.113.50", level: 7, desc: "SQL injection attempt detected.", mitre: "T1190" },
+            { time: "2026-08-26 14:10:44", ip: "192.168.1.102", level: 12, desc: "Syscheck: File modified in /etc/.", mitre: "T1492" },
+            { time: "2026-08-26 12:05:12", ip: "172.16.0.5", level: 3, desc: "New connection established.", mitre: "-" },
+            { time: "2026-08-26 11:50:33", ip: "45.33.32.156", level: 14, desc: "Root privilege escalation detected via sudo.", mitre: "T1548" },
+            { time: "2026-08-26 11:15:20", ip: "192.168.1.55", level: 5, desc: "User session opened successfully.", mitre: "-" },
+            { time: "2026-08-26 10:42:19", ip: "185.220.101.5", level: 11, desc: "Multiple failed login attempts from Tor exit node.", mitre: "T1110" },
+            { time: "2026-08-26 10:05:01", ip: "10.0.0.42", level: 8, desc: "Port scanning activity identified.", mitre: "T1046" },
+            { time: "2026-08-26 09:33:14", ip: "192.168.1.200", level: 2, desc: "Service started: Apache HTTP Server.", mitre: "-" },
+            { time: "2026-08-26 09:12:55", ip: "198.51.100.22", level: 13, desc: "Command injection payload found in HTTP headers.", mitre: "T1059" },
+            { time: "2026-08-26 08:45:00", ip: "172.16.0.88", level: 9, desc: "Outbound connection to known C2 server blocked.", mitre: "T1071" },
+            { time: "2026-08-26 08:20:11", ip: "192.168.1.10", level: 4, desc: "Cron job executed successfully.", mitre: "-" },
+            { time: "2026-08-26 07:55:40", ip: "10.0.0.15", level: 12, desc: "Unauthorized modification of shadow file.", mitre: "T1003" },
+            { time: "2026-08-26 07:10:22", ip: "203.0.113.99", level: 10, desc: "Brute force attack against FTP service.", mitre: "T1110" },
+            { time: "2026-08-25 23:40:15", ip: "192.168.1.110", level: 6, desc: "DNS query for suspicious domain.", mitre: "T1071" },
+            { time: "2026-08-25 22:15:30", ip: "192.168.1.15", level: 11, desc: "Failed SSH login for invalid user.", mitre: "T1110" },
+            { time: "2026-08-25 21:05:12", ip: "10.0.0.73", level: 3, desc: "DHCP IP lease renewed.", mitre: "-" },
+            { time: "2026-08-25 20:50:44", ip: "198.51.100.5", level: 13, desc: "Web shell uploaded via vulnerable file upload.", mitre: "T1505" },
+            { time: "2026-08-25 19:33:02", ip: "172.16.0.12", level: 8, desc: "Internal host communicating with external IP.", mitre: "T1095" },
+            { time: "2026-08-25 18:22:10", ip: "192.168.1.25", level: 12, desc: "Malware signature detected by antivirus.", mitre: "T1204" },
+            { time: "2026-08-25 17:40:55", ip: "45.154.255.88", level: 10, desc: "Directory traversal attempt on web server.", mitre: "T0830" },
+            { time: "2026-08-25 16:11:00", ip: "10.0.0.2", level: 1, desc: "System boot completed.", mitre: "-" },
+            { time: "2026-08-25 15:02:33", ip: "192.168.1.80", level: 9, desc: "Suspicious PowerShell execution bypass.", mitre: "T1059" },
+            { time: "2026-08-25 14:20:19", ip: "203.0.113.15", level: 14, desc: "Data exfiltration over encrypted channel.", mitre: "T1041" },
+            { time: "2026-08-25 13:50:41", ip: "172.16.0.99", level: 5, desc: "User password changed successfully.", mitre: "-" },
+            { time: "2026-08-25 12:15:08", ip: "192.168.1.102", level: 11, desc: "Hidden file created in /tmp directory.", mitre: "T1064" },
+            { time: "2026-08-25 11:05:22", ip: "10.0.0.100", level: 7, desc: "Cross-site scripting (XSS) probe detected.", mitre: "T1190" },
+            { time: "2026-08-25 10:30:14", ip: "198.51.100.80", level: 12, desc: "Buffer overflow attempt in daemon.", mitre: "T1203" },
+            { time: "2026-08-25 09:44:50", ip: "192.168.1.5", level: 3, desc: "Interface eth0 up and running.", mitre: "-" },
+            { time: "2026-08-25 08:12:33", ip: "185.100.87.12", level: 10, desc: "RDP brute force attack identified.", mitre: "T1110" },
+            { time: "2026-08-25 07:25:11", ip: "10.0.0.9", level: 4, desc: "Firewall rule updated by admin.", mitre: "-" },
+            { time: "2026-08-25 06:15:00", ip: "172.16.0.4", level: 13, desc: "Kernel module loaded dynamically.", mitre: "T1547" },
+            { time: "2026-08-24 23:55:10", ip: "192.168.1.150", level: 8, desc: "High outbound traffic volume detected.", mitre: "T1048" },
+            { time: "2026-08-24 22:40:19", ip: "203.0.113.77", level: 11, desc: "Attempt to access restricted configuration file.", mitre: "T1083" },
+            { time: "2026-08-24 21:10:05", ip: "10.0.0.50", level: 2, desc: "NTP time synchronization successful.", mitre: "-" },
+            { time: "2026-08-24 20:05:44", ip: "192.168.1.33", level: 12, desc: "CRON persistence mechanism added.", mitre: "T1053" },
+            { time: "2026-08-24 19:22:30", ip: "198.51.100.12", level: 9, desc: "SQL error-based injection attempt.", mitre: "T1190" },
+            { time: "2026-08-24 18:11:55", ip: "172.16.0.21", level: 6, desc: "Local user account created.", mitre: "T1136" },
+            { time: "2026-08-24 17:03:12", ip: "192.168.1.75", level: 14, desc: "Credential dumping tools execution observed.", mitre: "T1003" },
+            { time: "2026-08-24 16:30:00", ip: "10.0.0.11", level: 3, desc: "Service restarted: MySQL Database.", mitre: "-" },
+            { time: "2026-08-24 15:45:22", ip: "45.12.33.9", level: 10, desc: "Scanner user-agent detected in access logs.", mitre: "T1595" },
+            { time: "2026-08-24 14:20:11", ip: "192.168.1.120", level: 11, desc: "Unauthorized service bind to high port.", mitre: "T1571" },
+            { time: "2026-08-24 13:12:44", ip: "203.0.113.8", level: 7, desc: "Remote file inclusion (RFI) attempt.", mitre: "T1190" },
+            { time: "2026-08-24 12:00:15", ip: "172.16.0.7", level: 4, desc: "Backup routine finished successfully.", mitre: "-" },
+            { time: "2026-08-24 11:33:50", ip: "192.168.1.90", level: 13, desc: "Clearance of system audit logs detected.", mitre: "T1070" },
+            { time: "2026-08-24 10:15:33", ip: "10.0.0.6", level: 5, desc: "SSL certificate renewed automatically.", mitre: "-" },
+            { time: "2026-08-24 09:05:12", ip: "198.51.100.44", level: 12, desc: "Remote Code Execution (RCE) payload triggered.", mitre: "T1203" },
+            { time: "2026-08-24 08:40:01", ip: "192.168.1.2", level: 2, desc: "System check passed without errors.", mitre: "-" },
+            { time: "2026-08-24 07:22:19", ip: "185.220.101.1", level: 10, desc: "HTTP flood denial of service sign.", mitre: "T1498" },
+            { time: "2026-08-24 06:14:50", ip: "10.0.0.80", level: 8, desc: "Suspicious registry run key modification.", mitre: "T1547" },
+            { time: "2026-08-24 05:30:11", ip: "172.16.0.15", level: 11, desc: "Insecure permissions set on critical file.", mitre: "T1222" },
+            { time: "2026-08-23 23:12:40", ip: "192.168.1.250", level: 9, desc: "Network share enumeration attempt.", mitre: "T1135" },
+            { time: "2026-08-23 22:01:15", ip: "203.0.113.60", level: 14, desc: "Malicious payload execution via macro.", mitre: "T1204" },
+            { time: "2026-08-23 21:45:00", ip: "10.0.0.3", level: 3, desc: "User logged out.", mitre: "-" },
+            { time: "2026-08-23 20:33:22", ip: "192.168.1.14", level: 12, desc: "Suspicious cron tab entry discovered.", mitre: "T1053" },
+            { time: "2026-08-23 19:15:44", ip: "198.51.100.99", level: 7, desc: "Parameter tampering detected in web form.", mitre: "T1190" },
+            { time: "2026-08-23 18:04:12", ip: "172.16.0.33", level: 10, desc: "SSH tunneling or port forwarding active.", mitre: "T1572" },
+            { time: "2026-08-23 17:50:33", ip: "192.168.1.18", level: 4, desc: "Package update check executed.", mitre: "-" },
+            { time: "2026-08-23 16:22:05", ip: "45.33.32.10", level: 13, desc: "Unusual outbound data transfer over DNS.", mitre: "T1071" }
+        ];
 
-            // Usar textContent para o texto seguro previne XSS dentro da própria mensagem
-            resultadoEl.textContent = "Você pesquisou por: ";
-            // E innerHTML apenas para o conteúdo que *deve* ser vulnerável
-            var spanVulneravel = document.createElement('span');
-            spanVulneravel.innerHTML = pesquisa;
-            resultadoEl.appendChild(spanVulneravel);
+        function executeSearch(query) {
+            const resultsInfo = document.getElementById('resultsInfo');
+            const searchQueryEl = document.getElementById('searchQuery');
+            const logTableBody = document.getElementById('logTableBody');
+            const flagAlert = document.getElementById('flagAlert');
+            const flagText = document.getElementById('flagText');
+            
+            // CORREÇÃO 1: Garante que a flag seja ocultada toda vez que uma nova busca começa
+            flagAlert.classList.add('hidden');
+            flagText.textContent = "";
+            
+            if(query) {
+                resultsInfo.classList.remove('hidden');
+                
+                // ⚠️ XSS SINK 1 (HTML CONTEXT)
+                searchQueryEl.innerHTML = `Active filter: <strong>${query}</strong> <a href="#" onclick="document.getElementById('searchInput').value=''; document.getElementById('searchForm').dispatchEvent(new Event('submit')); return false;" class="text-blue-400 ml-2 hover:underline">Clear</a>`;
 
+                // Truque para executar tags <script> via innerHTML
+                Array.from(searchQueryEl.querySelectorAll("script")).forEach(oldScript => {
+                    const newScript = document.createElement("script");
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
 
-            // Detecção básica de tentativa de XSS para revelar a flag
-            if (pesquisa.toLowerCase().includes("<script>") || 
-                pesquisa.toLowerCase().includes("onerror") || 
-                pesquisa.toLowerCase().includes("alert(")) {
-                flagEl.innerHTML = "Flag encontrada: <strong>FLAG{X55_J4V45CR1PT_5UC3550}</strong>";
+                // ⚠️ XSS SINK 2 (JAVASCRIPT CONTEXT)
+                try {
+                    eval(`var auditLog = 'Admin searched for: ${query}';`);
+                } catch(e) {}
             } else {
-                flagEl.innerHTML = "";
+                resultsInfo.classList.add('hidden');
+            }
+
+            // Filtro da tabela
+            const lowerQuery = query ? query.toLowerCase() : "";
+            const filteredLogs = mockEvents.filter(log => 
+                log.ip.includes(lowerQuery) || log.desc.toLowerCase().includes(lowerQuery) || log.mitre.toLowerCase().includes(lowerQuery)
+            );
+
+            let tableHTML = "";
+            if (filteredLogs.length > 0) {
+                filteredLogs.forEach(log => {
+                    const levelColor = log.level >= 10 ? 'status-critical font-bold' : (log.level >= 7 ? 'text-yellow-500' : 'text-gray-400');
+                    tableHTML += `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-[#1c232f] transition-colors">
+                            <td class="px-6 py-4 text-gray-400 whitespace-nowrap">${log.time}</td>
+                            <td class="px-6 py-4 font-mono text-blue-400">${log.ip}</td>
+                            <td class="px-6 py-4 ${levelColor}">Level ${log.level}</td>
+                            <td class="px-6 py-4 text-gray-300">${log.desc}</td>
+                            <td class="px-6 py-4 text-gray-500 font-mono">${log.mitre}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                tableHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No security events found matching the criteria.</td></tr>`;
+            }
+            logTableBody.innerHTML = tableHTML;
+
+            // Detector de Flag
+            if (query && (query.toLowerCase().includes("<script") || query.toLowerCase().includes("onerror") || query.toLowerCase().includes("alert(") || query.toLowerCase().includes("onfocus") || query.toLowerCase().includes("onload"))) {
+                setTimeout(() => {
+                    flagAlert.classList.remove('hidden');
+                    flagText.textContent = "FLAG{X55_J4V45CR1PT_5UC3550}";
+                }, 500);
+            }
+        }
+
+        // Intercepta o formulário
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchTerm = document.getElementById('searchInput').value;
+            window.history.pushState({query: searchTerm}, '', '?q=' + encodeURIComponent(searchTerm));
+            executeSearch(searchTerm);
+        });
+
+        // CORREÇÃO 2: Escuta o botão de "Voltar" e "Avançar" do navegador
+        window.addEventListener('popstate', function(e) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryParam = urlParams.get('q');
+            if (queryParam) {
+                const decodedQuery = decodeURIComponent(queryParam);
+                document.getElementById('searchInput').value = decodedQuery;
+                executeSearch(decodedQuery);
+            } else {
+                document.getElementById('searchInput').value = "";
+                executeSearch("");
+            }
+        });
+
+        // Executado ao abrir a página pela primeira vez
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryParam = urlParams.get('q');
+            if (queryParam) {
+                const decodedQuery = decodeURIComponent(queryParam);
+                document.getElementById('searchInput').value = decodedQuery;
+                executeSearch(decodedQuery);
+            } else {
+                executeSearch("");
             }
         };
     </script>
