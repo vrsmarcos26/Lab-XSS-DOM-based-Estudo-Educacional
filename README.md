@@ -1,18 +1,16 @@
 <div align="center">
   <h1>
-    Laboratório de XSS Baseado em DOM
-    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Test%20Tube.png" alt="Tubo de Ensaio" width="45" height="45" />
+    Laboratório de XSS Baseado em DOM (CTF Edition) 🧪
   </h1>
 </div>
 
 <p align="center">
   <img alt="Linguagem Principal" src="https://img.shields.io/github/languages/top/vrsmarcos26/Lab-XSS-DOM-based-Estudo-Educacional?style=for-the-badge&color=F7DF1E">
-  <img alt="Último Commit" src="https://img.shields.io/github/last-commit/vrsmarcos26/Lab-XSS-DOM-based-Estudo-Educacional?style=for-the-badge&color=green">
-  <img alt="Hospedagem" src="https://img.shields.io/badge/GitHub_Pages-222222?style=for-the-badge&logo=githubpages&logoColor=white">
+  <img alt="Licença" src="https://img.shields.io/github/license/vrsmarcos26/Lab-XSS-DOM-based-Estudo-Educacional?style=for-the-badge&color=blue">
 </p>
 
 <p align="center">
-  Um painel simulado de Inteligência de Ameaças (W-SIEM Security Events) intencionalmente vulnerável a ataques de Cross-Site Scripting (XSS) baseados no DOM.
+  Um painel de Inteligência de Ameaças (W-SIEM Security Events) intencionalmente vulnerável, focado em explorações puramente executadas do lado do cliente através da manipulação do Document Object Model (DOM)[].
 </p>
 
 <p align="center">
@@ -20,95 +18,129 @@
   <a href="#-objetivos-de-aprendizagem">Objetivos</a> •
   <a href="#-tecnologias-utilizadas">Tecnologias</a> •
   <a href="#-como-acessar-o-laboratório">Como Acessar</a> •
-  <a href="#-créditos">Créditos</a> •
-  <a href="#-licença">Licença</a>
+  <a href="#-jornada-de-exploração-ctf">Exploração (CTF)</a> •
+  <a href="#-créditos">Créditos</a>
 </p>
 
 ---
 
 ### ⚠️ Aviso Importante
 
-> **Este projeto é intencionalmente vulnerável.** Ele foi criado para fins estritamente educacionais, com o objetivo de estudar segurança ofensiva em um ambiente controlado. **NÃO REUTILIZE ESTE CÓDIGO EM PROJETOS REAIS OU SERVIDORES DE PRODUÇÃO.**
+> **Este projeto é intencionalmente vulnerável.** Ele foi criado para fins estritamente educacionais e demonstração de falhas web. **NÃO REUTILIZE ESTE CÓDIGO EM PROJETOS REAIS OU SERVIDORES DE PRODUÇÃO.**
 
 ---
 
 ### 🎯 Objetivos de Aprendizagem
 
-Este laboratório foi projetado para demonstrar na prática:
+Este laboratório isola as vulnerabilidades que ocorrem no navegador do usuário, dispensando falhas de processamento no back-end. Você aprenderá:
 
--   Como a manipulação insegura de JavaScript pode levar a vulnerabilidades de XSS no lado do cliente (Client-Side).
--   A diferença fundamental entre XSS Refletido (processado no servidor) e DOM-based XSS (processado no navegador da vítima).
--   Como explorar múltiplos **Contextos de Injeção** (HTML Context via `innerHTML` e JavaScript Context via `eval()`).
--   O comportamento dos navegadores modernos (HTML5) em relação à injeção dinâmica da tag `<script>`.
+- A mecânica fundamental do **DOM-Based XSS**, injetando código interpretado dinamicamente através do Client-Side JavaScript[].
+- Técnicas de bypass de filtros fracos (Sanitização incompleta) no uso crítico da propriedade `.innerHTML`[].
+- Manipulação de estado e **Escalonamento de Privilégios local**, modificando variáveis de controle através do temido `eval()`[].
+- Técnicas de exfiltração silenciosa atacando o **LocalStorage** para o sequestro de Tokens e API Keys corporativas[].
 
 ---
 
 ### 🛠️ Tecnologias Utilizadas
 
-O ambiente do laboratório é construído com tecnologias front-end modernas, dispensando a necessidade de um back-end real:
+Este ambiente foi estruturado utilizando:
 
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"></a>
-  <a href="#"><img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white" alt="JavaScript"></a>
+  <a href="#"><img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"></a>
   <a href="#"><img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind"></a>
+  <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"></a>
 </p>
 
 ---
 
 ### ⚙️ Como Acessar o Laboratório
 
-Como este laboratório explora uma vulnerabilidade puramente Client-Side, **você não precisa instalar Docker ou configurar servidores locais.**
+Este laboratório possui duas formas de execução:
 
-O desafio está hospedado gratuitamente através do GitHub Pages.
+#### **Opção 1: Simulador Web (Estudo Básico)**
+Uma versão simplificada hospedada no GitHub Pages, focada na detecção de strings simples. 
+🔗 **[Acesse o simulador aqui](https://vrsmarcos26.github.io/Lab-XSS-DOM-based-Estudo-Educacional/simulador/)**
 
-👉 **[Acesse o simulador aqui](https://vrsmarcos26.github.io/Lab-XSS-DOM-based-Estudo-Educacional/)**
+#### **Opção 2: Contêiner Nginx (CTF Completo - Via Docker)**
+A experiência avançada, contendo a injeção de tokens, filtros customizados e interações em tempo real com a engine JavaScript do navegador.
 
-*(Caso prefira auditar o código localmente, basta clonar este repositório e abrir o arquivo `index.html` diretamente no seu navegador).*
+1. Clone o Repositório:
+```bash
+git clone https://vrsmarcos26.github.io/Lab-XSS-DOM-based-Estudo-Educacional/simulador/
+cd Lab-XSS-DOM-based-Estudo-Educacional
+```
+
+2. Construa e suba o ambiente através do Docker
+```bash
+sudo docker-compose up --build -d
+```
+
+3. Acesse a aplicação no seu navegador: http://localhost:8000
+
+---
+
+### 🎬 Jornada de Exploração (CTF)
+
+A barra de busca deste painel de segurança modifica ativamente o DOM da página. Para concluir o CTF, você precisará provar que tem domínio total sobre o estado do navegador e capturar três flags distintas:
+
+#### 🚩 Nível 1: Evasão de Filtro (DOM Mutation)
+O desenvolvedor implementou uma Regex de sanitização no JavaScript que remove agressivamente qualquer tag `<script>`. Seu objetivo é conseguir acionar a função base do navegador passando o valor `1` como alerta (ex: `alert(1)`), utilizando recursos alternativos do HTML5 para escapar da filtragem.
+
+#### 🚩 Nível 2: Escalonamento de Privilégio (Manipulação de Estado)
+O sistema esconde um painel global de "Debug Administrativo" que só é renderizado se uma variável interna restrita do JavaScript (`isAdmin`) assumir valor verdadeiro. Existe um ponto cego no código original que processa silenciosamente as buscas. Altere a execução lógica do código fonte da página e force o sistema a revelar a área corporativa para obter a segunda flag.
+
+#### 🚩 Nível 3: Roubo de Integrações (API Stealing)
+Um alerta genérico prova a vulnerabilidade, mas exfiltrar dados confidenciais consolida o risco crítico. O sistema W-SIEM salva uma "Chave de Integração" (API Key) secreta no banco de dados local do seu navegador (`localStorage`). Capture essa chave injetando um script que a recupere e a imprima na tela.
 
 <details>
-<summary><strong>💡 Como Resolver o Desafio (Write-up)</strong></summary>
+<summary><strong>💡 Resolução e Análise Técnica (Write-up)</strong></summary>
 
 <br>
 
-O portal "W-SIEM" permite pesquisar logs de eventos de segurança. O que você digitar na barra de pesquisa será refletido tanto na URL (via parâmetro `?q=`) quanto no corpo da página (DOM).
+A vulnerabilidade se manifesta devido ao repasse direto dos dados da URL (`window.location.search`) para sinks inseguros sem tratamento adequado[].
 
-Este laboratório possui **dois pontos de injeção (Sinks)** diferentes para você treinar suas habilidades:
+#### Solução do Nível 1 (Bypass de Filtro)
+A sanitização remove apenas as tags `<script>` padrão e a string `javascript:`[].
+Utilizamos elementos secundários e os seus manipuladores de eventos embutidos para contornar essa regra e acessar o `innerHTML`[].
+* **Payload:** `<img src=x onerror=alert(1)>`
+* **Resultado:** O alerta modificado validará o acionamento e devolverá a `FLAG{1_d0m_f1lt3r_byp4ss_m4st3r}`[].
 
-#### 1. Explorando o Contexto HTML (`innerHTML`)
-O desenvolvedor utilizou a propriedade `innerHTML` para renderizar o termo pesquisado na frase "Active filter: [termo]". 
-Você pode usar payloads clássicos baseados em eventos para executar código arbitrário:
-```html
-<img src=x onerror="alert(document.domain)">
+#### Solução do Nível 2 (Escalonamento via `eval`)
+Existe um sink secundário (`eval`) escondido na lógica de auditoria do JS: `eval("var internalAuditLog = 'Search trace: " + query + "';");`[].
+Para fugir das strings literais do código original e manipular a variável do sistema (`isAdmin`)[], nós fechamos a citação intencionalmente e reiniciamos a instrução com `true`, comentando o resto do lixo de código.
+* **Payload:** `'; isAdmin=true; //`
+* **Resultado:** O painel oculto roxo surgirá injetando na interface a `FLAG{2_d0m_pr1v3sc_3v4l}`.
 
-*Dica: O laboratório simula vulnerabilidades antigas, permitindo que até mesmo a tag `<script>alert(1)</script>` seja forçada a rodar no DOM.*
+#### Solução do Nível 3 (Roubo de LocalStorage)
+Através do bypass de filtro usado no Nível 1, direcionamos o vetor para ler as propriedades em cache do navegador[]. O token alvo é `w-siem_integration_token`[].
+* **Payload:** `<img src=x onerror=alert(localStorage.getItem("w-siem_integration_token"))>`
+* **Resultado:** O sistema interpretará o valor guardado em memória, validará a extração de dados sensíveis e retornará o alerta confirmando a `FLAG{3_l0c4l5t0r4g3_t0k3n_st0l3n}`[].
 
-#### 2. Explorando o Contexto JavaScript (`eval`)
-O sistema também registra silenciosamente o que o administrador está pesquisando usando a função `eval()`. 
-Para explorar isso, você deve "quebrar" a string do JavaScript, executar o seu alerta e comentar o resto do código da aplicação original.
-**Payload:**
-```javascript
-"; alert(1); //
-```
-
-Ao executar com sucesso um payload válido em qualquer um dos contextos, o script de auditoria do laboratório validará o ataque e revelará a flag de conclusão:
-`FLAG{X55_J4V45CR1PT_5UC3550}`
+**Como Mitigar:** 
+O uso de propriedades que processam HTML e strings não tipadas como `innerHTML`, `outerHTML`, e `eval()` é estruturalmente perigoso. Substitua-os sempre que possível por `textContent` ou `innerText`, que forçam o DOM a renderizar os dados do usuário apenas como texto livre inofensivo.
 
 </details>
 
----
+-----
 
 ### 🙌 Créditos
 
-Este projeto foi inspirado e baseado nos excelentes conceitos e aulas práticas do **Hacking Club**, uma referência de alta qualidade para quem está estudando segurança web ofensiva no Brasil.
+Este projeto foi inspirado nos conceitos práticos de segurança ofensiva do **Hacking Club**, sendo estruturado para o aprimoramento em testes de invasão e pesquisa de vulnerabilidades web.
 
----
+-----
 
 ### 📝 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
 <hr>
 
 <p align="center">
+<<<<<<< HEAD
   Desenvolvido por <b>vrsmarcos26</b>
 </p>
+=======
+Desenvolvido por <b>vrsmarcos26</b>
+</p>
+>>>>>>> 1b0fba2 (Atualizações)

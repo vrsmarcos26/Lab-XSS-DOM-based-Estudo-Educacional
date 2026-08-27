@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  wsiem-dom-lab:
+    build: .
+    container_name: aegis_wsiem_dom_xss
+    ports:
+      - "8000:80"
+    restart: unless-stopped
