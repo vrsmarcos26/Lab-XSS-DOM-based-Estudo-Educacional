@@ -60,6 +60,7 @@ O ambiente do laboratório é construído com tecnologias front-end modernas, di
 Como este laboratório explora uma vulnerabilidade puramente Client-Side, **você não precisa instalar Docker ou configurar servidores locais.**
 
 O desafio está hospedado gratuitamente através do GitHub Pages.
+
 👉 **[Acesse o simulador aqui](https://vrsmarcos26.github.io/Lab-XSS-DOM-based-Estudo-Educacional/)**
 
 *(Caso prefira auditar o código localmente, basta clonar este repositório e abrir o arquivo `index.html` diretamente no seu navegador).*
